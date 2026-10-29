@@ -1,0 +1,56 @@
+---
+title: System Architecture - Grounded Copilot
+config:
+  theme: base
+  themeVariables:
+    fontFamily: "Inter, system-ui, sans-serif"
+    primaryColor: "#F8FAFC"
+    primaryBorderColor: "#1E293B"
+    primaryTextColor: "#1E293B"
+    lineColor: "#64748B"
+    clusterBkg: "#EEF2FF"
+    clusterBorder: "#94A3B8"
+---
+flowchart TB
+    classDef edge     fill:#F59E0B,stroke:#1E293B,color:#1E293B,stroke-width:1px;
+    classDef core     fill:#6366F1,stroke:#1E293B,color:#ffffff,stroke-width:1px;
+    classDef data     fill:#10B981,stroke:#1E293B,color:#ffffff,stroke-width:1px;
+    classDef control  fill:#0EA5E9,stroke:#1E293B,color:#ffffff,stroke-width:1px;
+    classDef obs      fill:#CBD5E1,stroke:#1E293B,color:#1E293B,stroke-width:1px;
+
+    Client([Client]):::edge
+
+    subgraph Pipe["Copilot pipeline"]
+        direction TB
+        Retrieve["TF-IDF retrieval<br/>top-k passages + score"]:::core
+        Gate{"Abstain?<br/>top score below threshold"}:::control
+        Prompt["Build prompt<br/>numbered context + question"]:::core
+        Model["Provider<br/>offline composer or Claude"]:::control
+        Cite["Parse citations"]:::core
+        Faith["Faithfulness check<br/>each sentence supported by a cited source"]:::core
+    end
+
+    KB[(Knowledge base<br/>passages with sources)]:::data
+
+    subgraph Eval["Benchmark"]
+        direction TB
+        Cases[(Answerable + out-of-scope questions)]:::data
+        Score["Abstention accuracy, faithfulness, citation coverage"]:::obs
+    end
+
+    subgraph Edge["Service layer (stdlib HTTP)"]
+        direction TB
+        Router["Router<br/>/health | /ready | /metrics | /ask | /evaluate"]:::core
+    end
+
+    Result["Answer with citations or abstention"]:::obs
+
+    KB -.-> Retrieve
+    Retrieve --> Gate
+    Gate -->|weak| Result
+    Gate -->|ok| Prompt --> Model --> Cite --> Faith
+    Cases --> Score
+    Faith -.-> Score
+    Client -->|question| Router --> Pipe
+    Faith --> Result
+    Result --> Router -->|JSON response| Client
