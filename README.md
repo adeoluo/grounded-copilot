@@ -55,6 +55,8 @@ passages it cites. See the [ADRs](docs/adr/) for the key decisions.
 
 > Reproduce with `python -m grounded_copilot evaluate`. The benchmark labels each question as
 > answerable from the corpus or out of scope.
+>
+> These numbers come from the deterministic offline composer and are reproduced by the test suite in continuous integration (no network, no credentials). In production the provider is Claude behind the same interface; the abstention guardrail and faithfulness check apply to its answers exactly as they do here.
 
 | Metric (10-question benchmark) | Value |
 |---|---:|
