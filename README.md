@@ -70,6 +70,29 @@ and every answer carries a citation (**citation coverage 1.0**). The faithfulnes
 decorative: a test drives a deliberately hallucinating provider and the score drops below 0.5,
 showing the check catches unsupported claims.
 
+### Scale
+
+`benchmarks/scale.py` answers a fixed 100-question set (60 answerable, 40 deliberately
+out of scope) against progressively larger synthetic knowledge bases, reporting
+wall-clock time, question throughput, peak memory (stdlib `tracemalloc`, measured in a
+separate pass), and abstention accuracy. Measured on this machine (`uv run python
+benchmarks/scale.py`):
+
+| Passages | Seconds | Questions/sec | Peak MiB | Abstention accuracy |
+|---:|---:|---:|---:|---:|
+| 200 | 0.06 | 1,806 | 0.2 | 1.00 |
+| 500 | 0.17 | 599 | 0.6 | 1.00 |
+| 1,000 | 0.22 | 451 | 1.2 | 1.00 |
+| 2,000 | 0.36 | 276 | 2.4 | 1.00 |
+
+The guardrails hold as the corpus grows -- abstention accuracy stays 1.00 (and mean
+faithfulness and citation coverage stay 1.00 for the same reason: every answer is a
+sentence lifted from a cited passage) -- while throughput falls because the from-scratch
+TF-IDF retriever scores every passage per query. These numbers are from synthetic data on
+a pure-Python pipeline with the deterministic offline provider; they are **not** a
+comparison against production vector databases or frameworks, which would be far faster
+and are the right tool at real scale.
+
 ## Demonstration
 
 ```text
