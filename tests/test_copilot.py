@@ -46,6 +46,14 @@ def test_faithfulness_zero_without_citation() -> None:
     assert faithfulness("Jupiter is the largest planet.", []).score == 0.0
 
 
+def test_faithfulness_zero_when_answer_has_no_citation_markers() -> None:
+    # Regression: an answer that overlaps a supplied passage but cites nothing
+    # (no [n] markers) must still score zero, matching the documented contract.
+    passage = ["Jupiter is the largest planet in the Solar System. It is a gas giant."]
+    report = faithfulness("Jupiter is the largest planet in the Solar System.", passage)
+    assert report.score == 0.0
+
+
 def test_copilot_answers_with_citation() -> None:
     answer = Copilot().answer("What is the largest planet in the Solar System?")
     assert not answer.abstained
