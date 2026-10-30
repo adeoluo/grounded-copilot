@@ -51,11 +51,13 @@ def faithfulness(
     """Return the fraction of answer sentences supported by the cited passages.
 
     A sentence is supported when at least ``threshold`` of its content words appear
-    in some cited passage. An answer with no sentences or no citations scores zero.
+    in some cited passage. An answer that cites no sources (no ``[n]`` markers) or
+    has no sentences scores zero, regardless of how many passages are supplied: an
+    answer is only faithful if it actually attributes its claims.
     """
 
     sentences = _sentences(answer)
-    if not sentences or not cited_passages:
+    if not sentences or not cited_passages or not extract_citations(answer):
         return FaithfulnessReport(score=0.0, supported=0, total=len(sentences))
     passage_words = [_content_words(passage) for passage in cited_passages]
     supported = 0
