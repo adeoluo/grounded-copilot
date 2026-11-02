@@ -30,7 +30,7 @@
 
 ## Supply chain
 - No third-party runtime packages; the production provider uses the standard-library HTTP
-  client. Development tooling is pinned via `uv.lock`. CodeQL and dependency scanning run in CI.
+  client. Development tooling is pinned via `uv.lock`. CodeQL runs in CI.
 
 ## Residual risk
 - A retrieval miss can cause a false abstention, and word-overlap faithfulness can be fooled by a
