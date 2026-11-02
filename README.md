@@ -33,10 +33,15 @@ Claude provider** powers production.
   <img src="docs/architecture/architecture.svg" alt="Architecture diagram" width="860">
 </p>
 
-A question retrieves the top passages; if the best score is below the abstention threshold the
-copilot declines; otherwise the numbered passages and the question become a prompt, the provider
-returns an answer with citations, and a faithfulness check verifies each answer sentence against the
-passages it cites. See the [ADRs](docs/adr/) for the key decisions.
+<sub>Legend: amber = entry points and external systems, indigo = core logic, green = data and state, blue = validation and control, grey = observability and outputs.</sub>
+
+A question, from the CLI or a validated `/ask` request, retrieves the top passages; if the best
+score is below the abstention threshold the copilot declines; otherwise the numbered passages and
+the question become a prompt, the provider (an offline composer by default, or Claude when a key is
+set) returns an answer with citations, and a faithfulness check verifies each answer sentence
+against the passages it cites. The benchmark scores abstention accuracy, faithfulness, and citation
+coverage over answerable and out-of-scope questions, and every route records latency and errors for
+`/metrics`. See the [ADRs](docs/adr/) for the key decisions.
 
 ### Components
 

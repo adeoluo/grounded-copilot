@@ -5,39 +5,54 @@ flowchart TD
     classDef control  fill:#0EA5E9,stroke:#1E293B,color:#ffffff,stroke-width:1px;
     classDef obs      fill:#CBD5E1,stroke:#1E293B,color:#1E293B,stroke-width:1px;
 
-    Client([Client]):::edge
+    User([CLI user]):::edge
+    Client([HTTP client]):::edge
+    Claude([Anthropic Messages API<br/>optional, needs ANTHROPIC_API_KEY]):::edge
 
-    subgraph Pipe["Copilot pipeline"]
+    subgraph Interfaces["Interfaces (CLI and stdlib HTTP)"]
         direction TB
-        Retrieve["TF-IDF retrieval<br/>top-k passages + score"]:::core
-        Gate{"Abstain?<br/>top score below threshold"}:::control
-        Prompt["Build prompt<br/>numbered context + question"]:::core
-        Model["Provider<br/>offline composer or Claude"]:::control
-        Cite["Parse citations"]:::core
-        Faith["Faithfulness check<br/>each sentence supported by a cited source"]:::core
+        CLI["cli.py<br/>evaluate | ask | serve"]:::edge
+        Router["service.py router<br/>/health /ready /ask /evaluate /metrics"]:::core
+        Validate["Request validation<br/>question, max 2000 characters"]:::control
     end
 
-    KB[(Knowledge base<br/>passages with sources)]:::data
-
-    subgraph Eval["Benchmark"]
+    subgraph Core["Copilot pipeline (copilot.py)"]
         direction TB
-        Cases[(Answerable + out-of-scope questions)]:::data
-        Score["Abstention accuracy, faithfulness, citation coverage"]:::obs
+        Retrieve["TF-IDF retriever<br/>top 3 passages and score"]:::core
+        Gate{"Abstain gate<br/>top score below 0.08"}:::control
+        Prompt["Prompt builder<br/>numbered passages and question"]:::core
+        Provider["Provider<br/>offline composer by default"]:::core
+        Cite["Citation parser<br/>passage numbers to sources"]:::core
     end
 
-    subgraph Edge["Service layer (stdlib HTTP)"]
+    subgraph State["Data and state (in memory)"]
         direction TB
-        Router["Router<br/>/health | /ready | /metrics | /ask | /evaluate"]:::core
+        KB[("Knowledge base<br/>passages with sources")]:::data
+        Cases[("Question cases<br/>answerable and out of scope")]:::data
     end
 
-    Result["Answer with citations or abstention"]:::obs
+    subgraph Obs["Evaluation and observability"]
+        direction TB
+        Faith["Faithfulness check<br/>sentences supported by cited passages"]:::obs
+        Answer["Answer JSON<br/>citations or abstention"]:::obs
+        Bench["evaluation.py<br/>abstention accuracy, faithfulness, coverage"]:::obs
+        Metrics["ServiceMetrics<br/>Prometheus text"]:::obs
+    end
 
-    KB -.-> Retrieve
-    Retrieve --> Gate
-    Gate -->|weak| Result
-    Gate -->|ok| Prompt --> Model --> Cite --> Faith
-    Cases --> Score
-    Faith -.-> Score
-    Client -->|question| Router --> Pipe
-    Faith --> Result
-    Result --> Router -->|JSON response| Client
+    User -->|arguments| CLI
+    Client -->|JSON request| Router
+    Router -->|POST /ask| Validate
+    Validate -->|question| Retrieve
+    CLI -->|question| Retrieve
+    KB -.->|indexed passages| Retrieve
+    Retrieve -->|hits and top score| Gate
+    Gate -->|weak: abstain| Answer
+    Gate -->|strong| Prompt
+    Prompt -->|system and prompt| Provider
+    Provider -->|when configured| Claude
+    Provider -->|raw answer| Cite
+    Cite -->|cited passages| Faith
+    Faith -->|score| Answer
+    Cases -.->|expected behavior| Bench
+    Answer -->|per-case results| Bench
+    Router -.->|route latency and errors| Metrics
