@@ -174,6 +174,12 @@ Faithfulness and abstention on the evaluation set.
   <img src="docs/demo/evaluate.gif" alt="Faithfulness and abstention on the evaluation set" width="860">
 </p>
 
+The HTTP service: a grounded answer and an abstention.
+
+<p align="center">
+  <img src="docs/demo/http.gif" alt="The HTTP service: a grounded answer and an abstention" width="860">
+</p>
+
 ## Design decisions
 
 - **Abstain on weak retrieval**: a retrieval-score threshold is a simple, honest gate that keeps the
