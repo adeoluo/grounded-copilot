@@ -2,7 +2,7 @@
 
 ## Overview
 - **What it is:** a retrieval-augmented copilot with inline citations, an abstention guardrail, and a
-  faithfulness check, built from scratch. No third-party dependency.
+  faithfulness check, built from scratch.
 - **Base model:** pluggable. Offline, a composer that answers from the retrieved passages is used for
   tests and CI; in production, Anthropic's Claude via the Messages API.
 - **Version and date:** 0.1.0, 2026.

@@ -13,7 +13,7 @@ a sentence lifted from a cited passage and out-of-scope questions fall below the
 retrieval threshold. Throughput falls because the from-scratch TF-IDF retriever
 scores every passage per query.
 
-The data is synthetic and the pipeline is pure Python with a deterministic offline
+The data is synthetic and the pipeline runs in Python with a deterministic offline
 provider (the ``FakeProvider``; production swaps in Claude behind the same
 interface): these numbers measure the retrieval and grounding overhead, not a
 model's latency, and are not a comparison against a production vector database. The
@@ -135,7 +135,7 @@ def _peak_memory(workload: Workload) -> int:
 
 
 def main() -> None:
-    print("Synthetic corpus; from-scratch pure-Python retrieval + grounding (not a vector DB).")
+    print("Synthetic corpus; from-scratch Python retrieval + grounding (not a vector DB).")
     total_questions = _NUM_ANSWERABLE + _NUM_OUT_OF_SCOPE
     print(f"Fixed query set: {total_questions} questions ({_NUM_OUT_OF_SCOPE} out of scope).\n")
     header = (

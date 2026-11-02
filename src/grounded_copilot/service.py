@@ -1,4 +1,4 @@
-"""A dependency-free HTTP service exposing the grounded copilot.
+"""A standard-library HTTP service exposing the grounded copilot.
 
 The service answers questions from the built-in corpus, abstaining when retrieval
 is weak, and reports its benchmark scores. By default it uses the offline composer,

@@ -4,7 +4,7 @@ Each chunk is tokenized, term frequencies are weighted by inverse document
 frequency, and queries are scored by cosine similarity against the chunk vectors.
 This is enough to rank passages by relevance to a question and, crucially, to
 produce a top score the copilot can threshold on to decide whether to answer or
-abstain. There is no numerical library; vectors are sparse dictionaries.
+abstain. Vectors are sparse dictionaries keyed by term.
 """
 
 from __future__ import annotations

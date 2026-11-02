@@ -29,7 +29,7 @@
   rather than guessing, which limits fabricated answers.
 
 ## Supply chain
-- Zero third-party runtime dependencies; the production provider uses the standard-library HTTP
+- No third-party runtime packages; the production provider uses the standard-library HTTP
   client. Development tooling is pinned via `uv.lock`. CodeQL and dependency scanning run in CI.
 
 ## Residual risk

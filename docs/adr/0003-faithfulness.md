@@ -17,5 +17,5 @@ the fraction of supported sentences, and an answer with no citations scores zero
 - Grounding becomes a number the pipeline reports and tests assert on, not an assumption.
 - The check catches blatant hallucination: a test drives a provider that asserts an unsupported claim
   and the score drops below one half.
-- Content-word overlap is a proxy for entailment; it is simple and dependency-free but would miss a
+- Content-word overlap is a proxy for entailment; it is simple and transparent but would miss a
   paraphrase that is faithful in meaning yet shares few words, which the documentation notes.
