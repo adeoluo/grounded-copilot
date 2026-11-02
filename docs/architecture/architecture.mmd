@@ -5,54 +5,45 @@ flowchart LR
     classDef control  fill:#0EA5E9,stroke:#1E293B,color:#ffffff,stroke-width:1px;
     classDef obs      fill:#CBD5E1,stroke:#1E293B,color:#1E293B,stroke-width:1px;
 
-    User([CLI user]):::edge
-    Client([HTTP client]):::edge
-    Claude([Anthropic Messages API<br/>optional AnthropicProvider]):::edge
-
-    subgraph Interfaces["Interfaces (CLI and stdlib HTTP)"]
+    subgraph Interfaces["Interfaces"]
         direction TB
-        CLI["cli.py<br/>evaluate | ask | serve"]:::edge
-        Router["service.py router<br/>/health /ready /ask /evaluate /metrics"]:::core
-        Validate["Request validation<br/>question, max 2000 characters"]:::control
+        Users([Users and clients]):::edge
+        CLI["CLI<br/>evaluate, ask, serve"]:::edge
+        Router["HTTP service<br/>/ask /evaluate /metrics"]:::core
+        Validate["Validation<br/>question, max 2000"]:::control
+        Users --> CLI ~~~ Router --> Validate
     end
 
-    subgraph Core["Copilot pipeline (copilot.py)"]
+    subgraph State["Data and state"]
         direction TB
-        Retrieve["TF-IDF retriever<br/>top 3 passages and score"]:::core
-        Gate{"Abstain gate<br/>top score below 0.08"}:::control
-        Prompt["Prompt builder<br/>numbered passages and question"]:::core
-        Provider["Provider<br/>offline composer by default"]:::core
-        Cite["Citation parser<br/>passage numbers to sources"]:::core
+        KB[("Knowledge base<br/>passages, sources")]:::data
+        Cases[("Question cases<br/>in and out of scope")]:::data
+        KB ~~~ Cases
     end
 
-    subgraph State["Data and state (in memory)"]
+    subgraph Core["Copilot pipeline"]
         direction TB
-        KB[("Knowledge base<br/>passages with sources")]:::data
-        Cases[("Question cases<br/>answerable and out of scope")]:::data
+        Retrieve["TF-IDF retrieval<br/>top 3 and score"]:::core
+        Gate{"Abstain gate<br/>score below 0.08"}:::control
+        Prompt["Prompt builder<br/>numbered passages"]:::core
+        Provider["Provider<br/>offline composer"]:::core
+        Claude([Anthropic API<br/>optional provider]):::edge
+        Cite["Citation parser<br/>numbers to sources"]:::core
+        Retrieve --> Gate -->|strong| Prompt --> Provider --> Cite
+        Provider -.-> Claude
     end
 
     subgraph Obs["Evaluation and observability"]
         direction TB
-        Faith["Faithfulness check<br/>sentences supported by cited passages"]:::obs
+        Faith["Faithfulness<br/>cited sentence support"]:::obs
         Answer["Answer JSON<br/>citations or abstention"]:::obs
-        Bench["evaluation.py<br/>abstention accuracy, faithfulness, coverage"]:::obs
-        Metrics["ServiceMetrics<br/>Prometheus text"]:::obs
+        Bench["Benchmark<br/>abstention, coverage"]:::obs
+        Metrics["Metrics<br/>Prometheus text"]:::obs
+        Faith --> Answer --> Bench
+        Bench ~~~ Metrics
     end
 
-    User -->|arguments| CLI
-    Client -->|JSON request| Router
-    Router -->|POST /ask| Validate
-    Validate -->|question| Retrieve
-    CLI -->|question| Retrieve
-    KB -.->|indexed passages| Retrieve
-    Retrieve -->|hits and top score| Gate
-    Gate -->|weak: abstain| Answer
-    Gate -->|strong| Prompt
-    Prompt -->|system and prompt| Provider
-    Provider -->|when passed in| Claude
-    Provider -->|raw answer| Cite
-    Cite -->|cited passages| Faith
-    Faith -->|score| Answer
-    Cases -.->|expected behavior| Bench
-    Answer -->|per-case results| Bench
-    Router -.->|route latency and errors| Metrics
+    Interfaces -->|question| Core
+    State -.->|passages| Core
+    Core -->|answer or abstention| Obs
+    State -.->|expected behavior| Obs
