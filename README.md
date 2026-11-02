@@ -37,8 +37,8 @@ Claude provider** powers production.
 
 A question, from the CLI or a validated `/ask` request, retrieves the top passages; if the best
 score is below the abstention threshold the copilot declines; otherwise the numbered passages and
-the question become a prompt, the provider (an offline composer by default, or Claude when a key is
-set) returns an answer with citations, and a faithfulness check verifies each answer sentence
+the question become a prompt, the provider (an offline composer by default, or `AnthropicProvider`
+when passed in from Python) returns an answer with citations, and a faithfulness check verifies each answer sentence
 against the passages it cites. The benchmark scores abstention accuracy, faithfulness, and citation
 coverage over answerable and out-of-scope questions, and every route records latency and errors for
 `/metrics`. See the [ADRs](docs/adr/) for the key decisions.

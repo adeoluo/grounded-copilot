@@ -7,7 +7,7 @@ flowchart TD
 
     User([CLI user]):::edge
     Client([HTTP client]):::edge
-    Claude([Anthropic Messages API<br/>optional, needs ANTHROPIC_API_KEY]):::edge
+    Claude([Anthropic Messages API<br/>optional AnthropicProvider]):::edge
 
     subgraph Interfaces["Interfaces (CLI and stdlib HTTP)"]
         direction TB
@@ -49,7 +49,7 @@ flowchart TD
     Gate -->|weak: abstain| Answer
     Gate -->|strong| Prompt
     Prompt -->|system and prompt| Provider
-    Provider -->|when configured| Claude
+    Provider -->|when passed in| Claude
     Provider -->|raw answer| Cite
     Cite -->|cited passages| Faith
     Faith -->|score| Answer
