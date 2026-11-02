@@ -158,6 +158,22 @@ function, tested without a socket. Under a concurrent stress benchmark
 | POST | `/ask` | body `{"question": str}`; a grounded answer with citations or an abstention |
 | GET | `/evaluate` | abstention accuracy, faithfulness, and citation coverage on the benchmark |
 
+### Demos
+
+Recorded from real runs with [vhs](https://github.com/charmbracelet/vhs); each tape is in `docs/demo/`.
+
+Grounded answers with citations, and an abstention when the evidence is missing.
+
+<p align="center">
+  <img src="docs/demo/ask.gif" alt="Grounded answers with citations, and an abstention when the evidence is missing" width="860">
+</p>
+
+Faithfulness and abstention on the evaluation set.
+
+<p align="center">
+  <img src="docs/demo/evaluate.gif" alt="Faithfulness and abstention on the evaluation set" width="860">
+</p>
+
 ## Design decisions
 
 - **Abstain on weak retrieval**: a retrieval-score threshold is a simple, honest gate that keeps the
