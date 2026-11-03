@@ -1,0 +1,35 @@
+# Grounded Copilot
+
+> A retrieval-augmented copilot that answers only from its sources, with inline citations, an abstention guardrail when retrieval is weak, and a faithfulness check that verifies every claim traces back to a cited passage.
+
+Languages: Python. License: MIT. Source: https://github.com/adeoluo/grounded-copilot
+
+## Docs
+
+- [README](https://github.com/adeoluo/grounded-copilot/blob/main/README.md): motivation, architecture, results, quickstart, usage, design decisions, testing, responsible ai, limitations, roadmap
+- [AGENTS.md](https://github.com/adeoluo/grounded-copilot/blob/main/AGENTS.md): layout, commands and conventions for changing the code
+- [Architecture diagram](https://github.com/adeoluo/grounded-copilot/blob/main/docs/architecture/architecture.mmd): Mermaid source of the component diagram
+- [Data Card - Grounded Copilot](https://github.com/adeoluo/grounded-copilot/blob/main/docs/DATA_CARD.md)
+- [Definition of Done](https://github.com/adeoluo/grounded-copilot/blob/main/docs/DEFINITION_OF_DONE.md)
+- [Evaluation Report - Grounded Copilot](https://github.com/adeoluo/grounded-copilot/blob/main/docs/EVALUATION_REPORT.md)
+- [Model / System Card - Grounded Copilot](https://github.com/adeoluo/grounded-copilot/blob/main/docs/MODEL_CARD.md)
+- [Threat Model - Grounded Copilot](https://github.com/adeoluo/grounded-copilot/blob/main/docs/THREAT_MODEL.md)
+- [ADR-0001: Record architecture decisions](https://github.com/adeoluo/grounded-copilot/blob/main/docs/adr/0001-record-architecture-decisions.md)
+- [ADR-0002: Abstain when retrieval is weak](https://github.com/adeoluo/grounded-copilot/blob/main/docs/adr/0002-abstention.md)
+- [ADR-0003: Measure faithfulness per sentence](https://github.com/adeoluo/grounded-copilot/blob/main/docs/adr/0003-faithfulness.md)
+- [ADR-NNNN: <short title>](https://github.com/adeoluo/grounded-copilot/blob/main/docs/adr/template.md)
+- [Changelog](https://github.com/adeoluo/grounded-copilot/blob/main/CHANGELOG.md): release history
+
+## Source
+
+- [src/grounded_copilot/__init__.py](https://github.com/adeoluo/grounded-copilot/blob/main/src/grounded_copilot/__init__.py): Grounded Copilot - retrieval-augmented answers with citations and faithfulness.
+- [src/grounded_copilot/cli.py](https://github.com/adeoluo/grounded-copilot/blob/main/src/grounded_copilot/cli.py): Command line interface for the grounded copilot.
+- [src/grounded_copilot/compose.py](https://github.com/adeoluo/grounded-copilot/blob/main/src/grounded_copilot/compose.py): The offline answer composer used by the fake provider.
+- [src/grounded_copilot/copilot.py](https://github.com/adeoluo/grounded-copilot/blob/main/src/grounded_copilot/copilot.py): The copilot pipeline: retrieve, abstain or answer, cite, and check faithfulness.
+- [src/grounded_copilot/data.py](https://github.com/adeoluo/grounded-copilot/blob/main/src/grounded_copilot/data.py): A small knowledge base of passages and a labeled question benchmark.
+- [src/grounded_copilot/evaluation.py](https://github.com/adeoluo/grounded-copilot/blob/main/src/grounded_copilot/evaluation.py): Evaluation: abstention accuracy, faithfulness, and citation coverage.
+- [src/grounded_copilot/faithfulness.py](https://github.com/adeoluo/grounded-copilot/blob/main/src/grounded_copilot/faithfulness.py): Faithfulness checking: does every answer sentence trace to a cited source? An answer is faithful when each of its claims is supported by a passage it cites.
+- [src/grounded_copilot/observability.py](https://github.com/adeoluo/grounded-copilot/blob/main/src/grounded_copilot/observability.py): In-process request metrics for the HTTP service (Prometheus text exposition).
+- [src/grounded_copilot/provider.py](https://github.com/adeoluo/grounded-copilot/blob/main/src/grounded_copilot/provider.py): The language-model provider interface, a deterministic fake, and a real client.
+- [src/grounded_copilot/retrieval.py](https://github.com/adeoluo/grounded-copilot/blob/main/src/grounded_copilot/retrieval.py): A from-scratch TF-IDF retriever over a corpus of text chunks.
+- [src/grounded_copilot/service.py](https://github.com/adeoluo/grounded-copilot/blob/main/src/grounded_copilot/service.py): A standard-library HTTP service exposing the grounded copilot.
