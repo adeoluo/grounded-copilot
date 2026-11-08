@@ -7,7 +7,7 @@
 <p align="center">
   <a href="https://github.com/adeoluo/grounded-copilot/actions/workflows/ci.yml"><img alt="CI" src="https://github.com/adeoluo/grounded-copilot/actions/workflows/ci.yml/badge.svg"></a>
   <a href="https://github.com/adeoluo/grounded-copilot/releases"><img alt="Release" src="https://img.shields.io/github/v/release/adeoluo/grounded-copilot"></a>
-  <img alt="Python" src="https://img.shields.io/badge/python-3.11%20%7C%203.12-blue">
+  <img alt="Python" src="https://img.shields.io/badge/python-3.12%20%7C%203.13%20%7C%203.14%20%7C%203.15-blue">
   <a href="LICENSE"><img alt="License: MIT" src="https://img.shields.io/badge/license-MIT-green"></a>
 </p>
 
@@ -199,7 +199,7 @@ make lint type   # ruff format check, ruff lint, mypy
 - `tests/test_copilot.py`: tokenization, TF-IDF ranking, citation extraction, the faithfulness metric (including a deliberately hallucinating provider that the check must catch), answering with citations, abstention on out-of-scope questions, and the benchmark evaluation.
 - `tests/test_service_cli.py`: the HTTP handler layer (health, readiness, `/ask` answers and abstentions, validation, `/evaluate`, metrics, unknown routes) and the command-line interface.
 
-All tests use the deterministic offline composer, so they need no network or credentials. CI runs ruff format, ruff lint, mypy, and pytest with the coverage gate on Python 3.11 and 3.12, then builds the package and the Docker image.
+All tests use the deterministic offline composer, so they need no network or credentials. CI runs ruff format, ruff lint, mypy, and pytest with the coverage gate on Python 3.12, 3.13, 3.14 and 3.15, then builds the package and the Docker image.
 
 ## Responsible AI
 
