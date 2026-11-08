@@ -1,10 +1,22 @@
 cff-version: 1.2.0
-message: "If you use this work, please cite it."
+message: "If you use this software, please cite it as below."
+type: software
 title: "Grounded Copilot"
+abstract: "A retrieval-augmented copilot built from scratch: TF-IDF retrieval, inline citations, an abstention guardrail when retrieval is weak, and a sentence-level faithfulness check that verifies every claim traces to a cited source."
 authors:
   - family-names: "Ogunnoiki"
     given-names: "Adeolu"
-version: 0.1.0
-date-released: 2026-01-01
+version: "0.1.0"
+date-released: "2026-11-03"
 license: MIT
+repository-code: "https://github.com/adeoluo/grounded-copilot"
 url: "https://github.com/adeoluo/grounded-copilot"
+keywords:
+  - "anthropic"
+  - "citations"
+  - "faithfulness"
+  - "hallucination"
+  - "llm"
+  - "python"
+  - "rag"
+  - "retrieval-augmented-generation"
