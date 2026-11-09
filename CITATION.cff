@@ -6,8 +6,8 @@ abstract: "A retrieval-augmented copilot built from scratch: TF-IDF retrieval, i
 authors:
   - family-names: "Ogunnoiki"
     given-names: "Adeolu"
-version: "0.1.0"
-date-released: "2026-11-03"
+version: "0.1.1"
+date-released: "2026-11-09"
 license: MIT
 repository-code: "https://github.com/adeoluo/grounded-copilot"
 url: "https://github.com/adeoluo/grounded-copilot"

@@ -9,7 +9,7 @@ from grounded_copilot.faithfulness import FaithfulnessReport, extract_citations,
 from grounded_copilot.provider import AnthropicProvider, FakeProvider, Provider
 from grounded_copilot.retrieval import TfidfRetriever, tokenize
 
-__version__ = "0.1.0"
+__version__ = "0.1.1"
 
 __all__ = [
     "Answer",
